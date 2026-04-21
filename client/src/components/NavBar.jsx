@@ -5,11 +5,25 @@ const NavBar = ({ open, setOpen, cart }) => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+    const [user, setUser] = useState(null);
+
     const handleClick = () => {
         setOpen(true);
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setUser(null);
+        window.location.reload();
+    };
+
     useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
+
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 50);
         };
@@ -26,7 +40,7 @@ const NavBar = ({ open, setOpen, cart }) => {
                 transition: 'all 0.3s ease-in-out'
             }}>
                 <div className="nav-heading">
-                    <h3>OBSIDIAN</h3>
+                    <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}><h3>OBSIDIAN</h3></Link>
                 </div>
 
                 <ul>
@@ -37,7 +51,7 @@ const NavBar = ({ open, setOpen, cart }) => {
                     <li><a href="#">CONTACT</a></li>
                 </ul>
 
-                <div className="right-nav" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <div className="right-nav" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                     <div onClick={handleClick} style={{ cursor: "pointer", position: "relative", display: "inline-block" }}>
                         <span style={{ fontSize: "1.2rem" }}>🛒</span>
                         {cart && cart.length > 0 && (
@@ -46,7 +60,16 @@ const NavBar = ({ open, setOpen, cart }) => {
                             </span>
                         )}
                     </div>
-                    <button className='members'>MEMBERS</button>
+                    
+                    {user ? (
+                        <div className="user-profile" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <span style={{ fontSize: '0.8rem', fontWeight: '500', color: '#5a6428' }}>{user.name.toUpperCase()}</span>
+                            <button onClick={handleLogout} className='members' style={{ padding: '8px 15px' }}>LOGOUT</button>
+                        </div>
+                    ) : (
+                        <Link to="/login"><button className='members'>AUTH</button></Link>
+                    )}
+
                     <button className='menu' onClick={() => setIsMenuOpen(true)}>
                         <svg
                             width="32"
@@ -113,8 +136,14 @@ const NavBar = ({ open, setOpen, cart }) => {
                 </ul>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: 'auto' }}>
-                    <button className="mobile-login-btn">LOGIN</button>
-                    <button className="mobile-signup-btn">SIGN UP</button>
+                    {user ? (
+                        <button className="mobile-signup-btn" onClick={handleLogout}>LOGOUT</button>
+                    ) : (
+                        <>
+                            <Link to="/login" onClick={() => setIsMenuOpen(false)} style={{ width: '100%' }}><button className="mobile-login-btn" style={{ width: '100%' }}>LOGIN</button></Link>
+                            <Link to="/register" onClick={() => setIsMenuOpen(false)} style={{ width: '100%' }}><button className="mobile-signup-btn" style={{ width: '100%' }}>SIGN UP</button></Link>
+                        </>
+                    )}
                 </div>
             </div>
         </>

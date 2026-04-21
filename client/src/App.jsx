@@ -10,6 +10,10 @@ import Reviews from './components/Reviews'
 import Footer from './components/Footer'
 import AddToCart from './components/AddToCart'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Login from './components/auth/Login'
+import Register from './components/auth/Register'
+import axios from 'axios'
+
 const App = () => {
 
 
@@ -31,6 +35,50 @@ const App = () => {
   const [open, setOpen] = useState(false);
   const [cart, setcart] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [user, setUser] = useState(null);
+
+  // Fetch Cart from Backend
+  const fetchCart = async (token) => {
+    try {
+      const response = await axios.get('http://localhost:3000/api/cart', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setcart(response.data);
+    } catch (err) {
+      console.error('Error fetching cart:', err);
+    }
+  };
+
+  // Initial Load and Auth check
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    const token = localStorage.getItem('token');
+    if (storedUser && token) {
+      setUser(JSON.parse(storedUser));
+      fetchCart(token);
+    }
+  }, []);
+
+  // Sync Cart to Backend on Change
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token && user) {
+      const syncCart = async () => {
+        try {
+          await axios.post('http://localhost:3000/api/cart/sync', 
+            { items: cart },
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+        } catch (err) {
+          console.error('Error syncing cart:', err);
+        }
+      };
+      
+      // Basic debounce to avoid too many requests
+      const timeout = setTimeout(syncCart, 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [cart, user]);
 
   const filteredProducts = PRODUCTS.filter(product =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -40,7 +88,9 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        
         {/* HOME PAGE */}
         <Route path="/" element={
           <>
@@ -85,7 +135,7 @@ const App = () => {
                 )}
               </div>
             </div>
-            <button onClick={console.log(cart)}>click here</button>
+            <button onClick={() => console.log(cart)}>click here</button>
             <Collections />
             <Signature />
             <Reviews />
