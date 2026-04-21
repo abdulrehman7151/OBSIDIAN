@@ -5,9 +5,17 @@ const userRoutes = require("./Routes/UserRoutes");
 const cartRoutes = require("./Routes/CartRoutes");
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/obsidian";
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
 
 // Middleware
-app.use(cors());
+app.use(
+    cors({
+        origin: CLIENT_URL,
+        credentials: true
+    })
+);
 app.use(express.json());
 
 // Routes
@@ -19,7 +27,7 @@ app.get("/", (req, res) => {
 });
 
 // Database Connection
-mongoose.connect("mongodb://localhost:27017/obsidian")
+mongoose.connect(MONGODB_URI)
     .then(() => {
         console.log("Database connected successfully");
     })
@@ -27,7 +35,6 @@ mongoose.connect("mongodb://localhost:27017/obsidian")
         console.error("Database connection error:", error);
     });
 
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

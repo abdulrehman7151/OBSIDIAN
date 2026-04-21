@@ -15,6 +15,7 @@ import Register from './components/auth/Register'
 import axios from 'axios'
 
 const App = () => {
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 
   const PRODUCTS = [
@@ -40,7 +41,7 @@ const App = () => {
   // Fetch Cart from Backend
   const fetchCart = async (token) => {
     try {
-      const response = await axios.get('http://localhost:3000/api/cart', {
+      const response = await axios.get(`${API_BASE_URL}/api/cart`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setcart(response.data);
@@ -65,7 +66,7 @@ const App = () => {
     if (token && user) {
       const syncCart = async () => {
         try {
-          await axios.post('http://localhost:3000/api/cart/sync', 
+          await axios.post(`${API_BASE_URL}/api/cart/sync`, 
             { items: cart },
             { headers: { Authorization: `Bearer ${token}` } }
           );
