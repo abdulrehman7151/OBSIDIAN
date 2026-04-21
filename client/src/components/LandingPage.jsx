@@ -106,6 +106,34 @@ const LandingPage = () => {
                         ))}
                     </div>
                 </div>
+
+                {/* Floating Product Cards - right side */}
+                <div className="floating-cards" style={{ opacity: fade ? 1 : 0, transition: 'opacity 0.4s ease' }}>
+                    <div className="floating-card card-1">
+                        <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&q=80" alt="Leather Tote" />
+                        <div className="floating-card-info">
+                            <span className="floating-card-cat">Accessories</span>
+                            <h4>Leather Tote Luxe</h4>
+                            <p>$890</p>
+                        </div>
+                    </div>
+                    <div className="floating-card card-2">
+                        <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&q=80" alt="Silk Drape" />
+                        <div className="floating-card-info">
+                            <span className="floating-card-cat">Evening Wear</span>
+                            <h4>Silk Evening Drape</h4>
+                            <p>$1,280</p>
+                        </div>
+                    </div>
+                    <div className="floating-card card-3">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80" alt="Chelsea Boot" />
+                        <div className="floating-card-info">
+                            <span className="floating-card-cat">Footwear</span>
+                            <h4>Suede Chelsea Boot</h4>
+                            <p>$760</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
 

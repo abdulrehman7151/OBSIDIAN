@@ -45,7 +45,7 @@ const App = () => {
         <Route path="/" element={
           <>
             <div className="hero-section">
-              <NavBar open={open} setOpen={setOpen} cart={cart} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+              <NavBar open={open} setOpen={setOpen} cart={cart} />
               <LandingPage />
               <AddToCart open={open} setOpen={setOpen} cart={cart} setcart={setcart} />
             </div>
@@ -55,6 +55,25 @@ const App = () => {
                 <p>Trending Now</p>
                 <h2>Most <i>Coveted</i><br />This season</h2>
                 <p>Curated by our style team — the pieces our clients obsess over.</p>
+              </div>
+
+              <div className="product-search-bar">
+                <span className="product-search-icon">🔍</span>
+                <input
+                  type="text"
+                  placeholder="Search products by name or category..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="product-search-input"
+                />
+                {searchQuery && (
+                  <button
+                    className="product-search-clear"
+                    onClick={() => setSearchQuery("")}
+                  >
+                    ✕
+                  </button>
+                )}
               </div>
 
               <div className="product-card-section">
